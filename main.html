@@ -1,0 +1,172 @@
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN" "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+	  <meta http-equiv="refresh" content="30"/>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <meta http-eqcuiv="Content-Type" content="text/html; charset=UTF-8" />
+    <title>Smart Irrigation Network</title>
+    <style type="text/css">
+	
+      * 
+      {
+        margin: 0px 0px 0px 0px;
+        padding: 0px 0px 0px 0px;
+        font-family: Arial;
+      }
+@media screen and (min-width: 1000px) {
+      body, html 
+      {
+        padding: 3px 3px 3px 3px;
+        background: -webkit-linear-gradient(left top,#f1ee03, #09729b, #120A4F)fixed; /* For Safari 5.1 to 6.0 */
+        background: -o-linear-gradient(bottom right,  #f1ee03, #09729b, #120A4F)fixed; /* For Opera 11.1 to 12.0 */
+        background: -moz-linear-gradient(bottom right, #f1ee03, #09729b, #120A4F)fixed; /* For Firefox 3.6 to 15 */
+        
+      }
+    div.main_page 
+	{
+        width: 800px;
+        margin-bottom: 3px;
+    }
+}
+	body, html
+	{
+		color: white; 
+        font-size: 11pt;
+        text-align: center;
+		background-color: #09729b;
+		background: linear-gradient(to bottom right,  #f1ee03, #09729b, #120A4F) fixed;
+	}
+	div.main_page
+	{
+		padding: 0px 0px 0px 0px;
+        border-radius: 30px; padding: 14px 16px; /*Shadowed and rounded box.*/
+        border: solid 10px #000;
+        border-width: 2px;
+        border-color: #212738;
+        box-shadow: 10px 10px 5px black;
+		margin-left: auto;
+        margin-right: auto;
+		position: relative;
+		display: table;
+		background-color: rgb(255, 255, 255); 
+        text-align: center;
+	}
+	/*------------DROPDOWN BUTTON--------------- */
+	.dropbtn 
+	{
+		text-align: left;
+		background-color: #32cec1;
+		color: white;
+		padding: 16px;
+		font-size: 16px;
+		border: none;
+		cursor: pointer;
+	}
+	/* The container <div> - needed to position the dropdown content */     
+   .dropdown 
+	{
+		position: relative;
+		display: inline-block;
+	}
+	/* Dropdown Content (Hidden by Default) */
+	.dropdown-content 
+	{
+		display: none;
+		background-color: #f9f9f9;
+		
+		box-shadow: 0px 8px 16px 0px rgba(0,0,0,0.2);
+		z-index: 1;
+	}
+
+	/* Show the dropdown menu on hover */
+	.dropdown:hover .dropdown-content 
+	{
+		display: block;
+	}
+	/* Change the background color of the dropdown button when the dropdown content is shown */
+	.dropdown:hover .dropbtn 
+	{
+		background: -webkit-linear-gradient(left top,#f1ee03, #09729b, #120A4F);
+	}
+    .header
+    {
+        font-style: italic; font-weight: bold;
+    }
+
+	h1
+	{
+		background: -webkit-linear-gradient(left top,#f1ee03, #09729b, #120A4F);
+		-webkit-background-clip: text;
+		-webkit-text-fill-color: transparent;
+	}
+
+    </style>
+    <link rel="stylesheet" href="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/css/bootstrap.min.css" integrity="sha384-1q8mTJOASx8j1Au+a5WDVnPi2lkFfwwEAa8hDDdjZlpLegxhjVME1fgjWPGmkzs7" crossorigin="anonymous">
+    <!-- Latest compiled and minified JavaScript -->
+    <script src="https://maxcdn.bootstrapcdn.com/bootstrap/3.3.6/js/bootstrap.min.js" integrity="sha384-0mSbJDEHialfmuBBQP6A4Qrprq5OVfW37PRR3j5ELqxss1yVqOtnepnHVP9aJ7xS" crossorigin="anonymous"></script>
+    <script type="text/javascript">    
+      function startClock()
+      {
+          var today = new Date();
+          var h = today.getHours();
+          var m = today.getMinutes();
+          var s = today.getSeconds();
+          h = checkTime(h);
+          m = checkTime(m);
+          s = checkTime(s);
+          document.getElementById('clock').innerHTML = h + ":" + m + ":" + s;
+          var t = setTimeout(startClock, 500);
+      }
+      function checkTime(i) 
+      {
+          if (i < 10) {i = "0" + i};  // add zero in front of numbers < 10
+          return i;
+      }
+    </script>
+
+  </head>
+  <body onload="startClock()">
+
+    <div class="main_page">
+        <span class = "header">Time:
+          <span id="clock"></span>
+          | Rain Status: {{rain[-1]}}
+          | Temperature: {{temp[-1]}}C
+        </span>
+      <h1>Smart Irrigation Network</h1>
+      {% for pin in pins %}
+      <h3>{{ pins[pin].name }}
+      {% if pins[pin].state == true %}
+        is currently <strong>on</strong></h2>
+        <div class="row">
+		<div class="col-md-12"><a href="/{{pin}}/off" class="btn btn-lg btn-danger" role="button">Turn Off</a></div>
+		{{pins[pin].totaltime}} "minutes" watered this week.
+		</div>
+        {% elif pins[pin].state == false %}
+        is currently <strong>off</strong></h2>
+        <div class="row">
+		<div class="col-md-12"><a href="/{{pin}}/on" class="btn btn-md btn-primary" role="button">Turn On<br/>Sprinkler</a></div>
+        {{pins[pin].totaltime}} "minutes" watered this week.
+        </div>
+      {% endif %}
+      {% endfor %}
+      	<div class="dropdown"> 
+            <button class="dropbtn">Recent Sensor Data</button>
+            <div class="dropdown-content">
+				<table align = "center", border = "1">
+					<thead><tr><b><th>Time </th><th>Rain </th><th>Temp </th><th>Humidity</th></b></tr></thead>
+					<tbody>{% for row in data %}
+					<tr><td>{{row[0]}} </td>
+						<td>{{row[1]}} </td>
+						<td>{{row[2]}} C</td>
+						<td>{{row[3]}} %</td></tr>{% endfor %}</tbody>
+				</table>
+            </div> 
+	</div>
+	  </div>
+	</body>
+</html>
+
